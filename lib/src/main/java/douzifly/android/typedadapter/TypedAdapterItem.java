@@ -13,6 +13,8 @@ public abstract class TypedAdapterItem<T> {
     protected int mPosition;
     protected View mView;
     protected Context mContext;
+    protected T mData;
+    protected TypedAdapter<T> mAdapter;
 
     public void setPosition(int position) {
         mPosition = position;
@@ -31,7 +33,12 @@ public abstract class TypedAdapterItem<T> {
     }
 
 
-    public abstract void bind(T data);
+    public void bind(T data) {
+        mData = data;
+        onBind(data);
+    }
+
+    public abstract void onBind(T data);
 
     public abstract View onCreateView(Context context,
                                       LayoutInflater inflater,
@@ -42,6 +49,12 @@ public abstract class TypedAdapterItem<T> {
                                  ViewGroup parent) {
         mContext = context;
         mView = onCreateView(context, inflater, parent);
+        onViewCreated(mView);
         return mView;
     }
+
+    /**
+     * called after onCreateView
+     */
+    public void onViewCreated(View v) {};
 }

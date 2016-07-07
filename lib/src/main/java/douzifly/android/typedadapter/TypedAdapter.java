@@ -46,8 +46,26 @@ public class TypedAdapter<T> extends BaseAdapter {
         }
     }
 
-    public void setData(List<T> datas) {
+    public void setData(List<T> datas, boolean notify) {
         mDatas = datas;
+        if (notify) {
+            notifyDataSetChanged();
+        }
+    }
+
+    public void setData(List<T> datas) {
+        setData(datas, true);
+    }
+
+    public List<T> getData() {
+        return mDatas;
+    }
+
+    public void removeData(T data) {
+        if (mDatas == null) {
+            return;
+        }
+        mDatas.remove(data);
         notifyDataSetChanged();
     }
 
@@ -90,6 +108,8 @@ public class TypedAdapter<T> extends BaseAdapter {
         if (v == null) {
             // create view now
             item = mRenderCallback.createItem(data);
+            item.mAdapter = this;
+            item.mData = data;
             v = item.createView(mContext, LayoutInflater.from(mContext), parent);
             v.setTag(item);
         } else {
